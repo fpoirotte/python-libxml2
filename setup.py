@@ -70,7 +70,7 @@ def build_using_meson(libxml2, tmpdir):
     check_call([MESON, 'setup', *options, os.path.join(tmpdir.name, "build"), os.path.join(tmpdir.name, "src")])
     os.chdir(os.path.join(tmpdir.name, "build"))
     env = dict(os.environ.items())
-    env[f"DESTDIR={tmpdir.name}/install/"]
+    env["DESTDIR"] = f"{tmpdir.name}/install/"
     check_call([MESON, 'compile'], env=env)
 
 
