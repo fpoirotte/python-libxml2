@@ -1,0 +1,5 @@
+include README.md
+include LICENSE
+include libxml2-config.h
+include pyproject.toml
+include setup.py

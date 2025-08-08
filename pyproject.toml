@@ -1,0 +1,11 @@
+[project]
+name = "libxml2"
+#version = "2.14.5"
+version = "2.9.14"
+description = "A wrapper around the C libxml2 library to make it installable through pip/uv"
+requires-python = ">=3.11"
+readme = "README.md"
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
