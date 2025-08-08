@@ -50,13 +50,7 @@ def build_using_autotools(libxml2, tmpdir):
     os.chdir(os.path.join(tmpdir.name, "src"))
     options = ["--%s-%s" % ("with" if v else "without", k[5:]) for (k, v) in libxml2['config'].items() if k.startswith('with_')]
     options += [
-        "--with-minimum",
         "--with-python",
-        "--with-c14n",
-        "--with-catalog",
-        "--with-push",
-        "--with-xpath",
-        "--with-xptr",
     ]
 
     env = dict(os.environ.items())
@@ -70,12 +64,7 @@ def build_using_autotools(libxml2, tmpdir):
 def build_using_meson(libxml2, tmpdir):
     options = [f"-D{k}={str(v).lower()}" for (k, v) in libxml2['config'].items() if k.startswith('with_')]
     optiosn += [
-        "-Dminimum=true",
         "-Dpython=true",
-        "-Dwith_c14n=true",
-        "-Dwith_catalog=true",
-        "-Dwith_push=true",
-        "-Dwith_xpath=true",
     ]
 
     check_call([MESON, 'setup', *options, os.path.join(tmpdir.name, "build"), os.path.join(tmpdir.name, "src")])
