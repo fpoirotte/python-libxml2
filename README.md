@@ -47,6 +47,7 @@ Installation using pip should be similar to uv, but this has not been tested.
 You will need the following packages to build the libxml2 Python library from sources:
 
 * A working installation of Python >= 3.11
+* autoconf
 * A working compiler. GCC 14.2.0 is known to work.
 * both the libxml2 C library and its header files (i.e. `libxml2` & `libxml2-dev` on Debian)
 * header files for your Python installation (i.e. `python3-dev`)

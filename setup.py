@@ -29,6 +29,10 @@ mirror = os.environ.get('LIBXML2_MIRROR', "https://download.gnome.org/sources/li
 # command used to build libxml2 < 2.13.0.
 MAKE = os.environ.get('MAKE', 'make')
 
+# This environment variable can be used to override the path to the "autoreconf"
+# command used to build libxml2 < 2.13.0.
+AUTORECONF = os.environ.get('AUTORECONF', 'autoreconf')
+
 # This environment variable can be used to override the path to the "meson"
 # command used to build libxml2 >= 2.13.0.
 MESON = os.environ.get('MESON', 'meson')
@@ -55,9 +59,12 @@ def build_using_autotools(libxml2, tmpdir):
         "--with-xptr",
     ]
 
-    check_call(["./configure", *options])
-    check_call([MAKE])
-    check_call([MAKE, "install", f"DESTDIR={tmpdir.name}/install/"])
+    env = dict(os.environ.items())
+    env["LDFLAGS"] = "-Wl,--no-as-needed"
+    check_call([AUTORECONF, "-f", "-i"])
+    check_call(["./configure", *options], env=env)
+    check_call([MAKE], env=env)
+    check_call([MAKE, "install", f"DESTDIR={tmpdir.name}/install/"], env=env)
 
 
 def build_using_meson(libxml2, tmpdir):
