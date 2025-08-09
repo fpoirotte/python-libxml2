@@ -154,8 +154,15 @@ class my_bdist_wheel(bdist_wheel):
         # Move the newly-built files to this package's build directory.
         # We have to iterate over both "platlib" & "purelib" as they may be
         # different directories (e.g. "lib64" vs "lib" on Fedora).
-        # In addition, the package manager may have set PYTHON* environment
-        # variables which may cause sysconfig.get_path()'s result to be altered.
+        #
+        # In addition, we may be running inside a virtual environment,
+        # which will cause sysconfig.get_path() to return incorrect paths.
+        # We use sysconfig._get_preferred_schemes() to force it to return
+        # the native preferred paths for the platform, ignoring the virtual
+        # environment.
+        #
+        # Finally, the package manager may have set PYTHON* environment
+        # variables which may also alter sysconfig.get_path()'s results.
         # To avoid that, we retrieve the values using a separate interpreter
         # launched with -E to ignore the environment.
         purelib = check_output(
@@ -163,7 +170,7 @@ class my_bdist_wheel(bdist_wheel):
                 sys.executable,
                 "-E",
                 "-c",
-                'import sysconfig; print(sysconfig.get_path("purelib"), end="")'
+                'import sysconfig; print(sysconfig.get_path("purelib", sysconfig._get_preferred_schemes()["prefix"]), end="")'
             ],
             text=True,
         )
@@ -172,7 +179,7 @@ class my_bdist_wheel(bdist_wheel):
                 sys.executable,
                 "-E",
                 "-c",
-                'import sysconfig; print(sysconfig.get_path("platlib"), end="")'
+                'import sysconfig; print(sysconfig.get_path("platlib", sysconfig._get_preferred_schemes()["prefix"]), end="")'
             ],
             text=True,
         )
