@@ -154,8 +154,30 @@ class my_bdist_wheel(bdist_wheel):
         # Move the newly-built files to this package's build directory.
         # We have to iterate over both "platlib" & "purelib" as they may be
         # different directories (e.g. "lib64" vs "lib" on Fedora).
-        purelib = Path(tmpdir.name) / "install" / f"./{sysconfig.get_path('purelib')}"
-        platlib = Path(tmpdir.name) / "install" / f"./{sysconfig.get_path('platlib')}"
+        # In addition, the package manager may have set PYTHON* environment
+        # variables which may cause sysconfig.get_path()'s result to be altered.
+        # To avoid that, we retrieve the values using a separate interpreter
+        # launched with -E to ignore the environment.
+        purelib = check_output(
+            [
+                sys.executable,
+                "-E",
+                "-c",
+                'import sysconfig; print(sysconfig.get_path("purelib"), end="")'
+            ],
+            text=True,
+        )
+        platlib = check_output(
+            [
+                sys.executable,
+                "-E",
+                "-c",
+                'import sysconfig; print(sysconfig.get_path("platlib"), end="")'
+            ],
+            text=True,
+        )
+        purelib = Path(tmpdir.name) / "install" / f"./{purelib}"
+        platlib = Path(tmpdir.name) / "install" / f"./{platlib}"
         for d in (purelib, platlib):
             for f in d.iterdir():
                 if not str(f).endswith((".so", ".py")):
