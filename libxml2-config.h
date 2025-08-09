@@ -1,3 +1,10 @@
+/*
+    This file is used to retrieve the configuration used during
+    the compilation of libxml2, as well as its version.
+
+    It is parsed by the C preprocessor and generates a TOML file
+    which is later read by setup.py.
+*/
 #define quote "
 #define f(x) x
 #define tquote f(quote)f(quote)f(quote)
