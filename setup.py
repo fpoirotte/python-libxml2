@@ -2,6 +2,7 @@ import lzma
 import os
 import shutil
 import sys
+import sysconfig
 import tarfile
 import tempfile
 import tomllib
@@ -12,8 +13,6 @@ from setuptools.command.bdist_wheel import bdist_wheel
 from subprocess import check_call, check_output
 from urllib.request import urlretrieve
 
-
-old_pwd = os.getcwd()
 
 # If this environment variable is set to a non-empty value,
 # the temporary folder will not be deleted automatically,
@@ -37,6 +36,7 @@ AUTORECONF = os.environ.get('AUTORECONF', 'autoreconf')
 # command used to build libxml2 >= 2.13.0.
 MESON = os.environ.get('MESON', 'meson')
 
+
 # Read the version from pyproject.toml
 with (Path(__file__).parent / 'pyproject.toml').open('rb') as fp:
     toml = tomllib.load(fp)
@@ -44,6 +44,10 @@ version = toml['project']['version']
 major, minor, patch = version.split('.', 2)
 major = int(major)
 minor = int(minor)
+
+# Keep track of the current working directory for later reference
+old_pwd = os.getcwd()
+
 
 
 def build_using_autotools(libxml2, tmpdir):
@@ -147,14 +151,19 @@ class my_bdist_wheel(bdist_wheel):
         finally:
             os.chdir(old_pwd)
 
-        # Move the newly-built files to this package's purelib/platlib folders.
-        for f in next((Path(tmpdir.name) / "install").rglob("site-packages")).iterdir():
-            if not str(f).endswith((".so", ".py")):
-                continue
-            new_path = Path(self.bdist_dir) / f.name
-            new_path.parent.mkdir(parents=True, exist_ok=True)
-            print(f"Moving '{f}' to '{new_path}'")
-            shutil.move(str(f), str(new_path))
+        # Move the newly-built files to this package's build directory.
+        # We have to iterate over both "platlib" & "purelib" as they may be
+        # different directories (e.g. "lib64" vs "lib" on Fedora).
+        purelib = Path(tmpdir.name) / "install" / "./{sysconfig.get_path('purelib')}"
+        platlib = Path(tmpdir.name) / "install" / "./{sysconfig.get_path('platlib')}"
+        for d in (purelib, platlib):
+            for f in d.iterdir():
+                if not str(f).endswith((".so", ".py")):
+                    continue
+                new_path = Path(self.bdist_dir) / f.name
+                new_path.parent.mkdir(parents=True, exist_ok=True)
+                print(f"Moving '{f}' to '{new_path}'")
+                shutil.move(str(f), str(new_path))
         bdist_wheel.run(self)
 
 
@@ -171,7 +180,6 @@ for root, dirs, files in (Path(__file__).parent / "lib").walk(top_down=False):
 setup(
     cmdclass={
         "bdist_wheel": my_bdist_wheel,
-        #"build": my_build,
     },
     name="libxml2",
     version=version,
