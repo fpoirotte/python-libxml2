@@ -5,9 +5,6 @@ description = "A wrapper around the C libxml2 library to make it installable thr
 readme = "README.md"
 
 requires-python = ">=3.11"
-dependencies = [
-    "setuptools>=66.0.0",
-]
 
 [build-system]
 requires = ["setuptools"]

@@ -238,8 +238,6 @@ setup(
     version=version,
     description="A wrapper around the C libxml2 library to make it installable through pip/uv",
     url="https://github.com/fpoirotte/python-libxml2",
-    #packages=[''],
-    #package_dir={'': 'lib'},
-    #package_data={'': list(shared_objects)},
     include_package_data=True,
+    install_requires=["setuptools>=66.0.0"],
 )
