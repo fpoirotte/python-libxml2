@@ -74,7 +74,7 @@ def build_using_autotools(libxml2, tmpdir):
     env["LDFLAGS"] = "-Wl,--no-as-needed"
     check_call([AUTORECONF, "-f", "-i"])
     check_call(["./configure", *options], env=env)
-    check_call([MAKE], env=env)
+    check_call([MAKE, '-j', os.cpu_count()], env=env)
     check_call([MAKE, "install", f"DESTDIR={tmpdir.name}/install/"], env=env)
 
 
@@ -91,7 +91,7 @@ def build_using_meson(libxml2, tmpdir):
     os.chdir(os.path.join(tmpdir.name, "build"))
     env = dict(os.environ.items())
     env["DESTDIR"] = f"{tmpdir.name}/install/"
-    check_call([MESON, 'compile'], env=env)
+    check_call([MESON, 'compile', '-j' '0'], env=env)
 
 
 shared_objects = set()
