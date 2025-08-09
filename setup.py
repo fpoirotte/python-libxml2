@@ -36,6 +36,11 @@ AUTORECONF = os.environ.get('AUTORECONF', 'autoreconf')
 # command used to build libxml2 >= 2.13.0.
 MESON = os.environ.get('MESON', 'meson')
 
+# This environment variable can be used to override the C compiler in use.
+# In reality, the C compiler will only be called with the "-E" flag to invoke
+# its preprocessor. This is used to turn libxml2-config.h into a TOML file.
+CC = os.environ.get('CC', 'cc')
+
 
 # Read the version from pyproject.toml
 with (Path(__file__).parent / 'pyproject.toml').open('rb') as fp:
@@ -132,7 +137,6 @@ class my_bdist_wheel(bdist_wheel):
             sys.exit(1)
 
         # Find out the options originally used when compiling libxml2
-        CC = os.environ.get('CC', 'cc')
         data = check_output(
             [CC, '-w', '-I', xml_includes, '-E', '-ansi', '-P', str(Path(__file__).parent / 'libxml2-config.h')],
             text=True,
