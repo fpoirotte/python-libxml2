@@ -86,11 +86,5 @@ See `LICENSE` inside this repository for more information.
 To rebase the versioned branches, just run:
 
 ```sh
-eval $(
-    set -x
-    git for-each-ref --shell \
-        --format='if [ "%(refname)" != "refs/heads/main" ]; then git rebase main %(refname) && git push -f origin %(refname); fi;' \
-        refs/heads/
-    set +x
-)
+./rebase.sh
 ```
