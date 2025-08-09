@@ -74,7 +74,7 @@ def build_using_autotools(libxml2, tmpdir):
     env["LDFLAGS"] = "-Wl,--no-as-needed"
     check_call([AUTORECONF, "-f", "-i"])
     check_call(["./configure", *options], env=env)
-    check_call([MAKE, '-j', os.cpu_count()], env=env)
+    check_call([MAKE, '-j', str(os.cpu_count())], env=env)
     check_call([MAKE, "install", f"DESTDIR={tmpdir.name}/install/"], env=env)
 
 
