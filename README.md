@@ -9,7 +9,6 @@ See below for more information.
 **Warning:** this wrapper has only been tested on Debian.
 It might work on other distributions, but no guarantee is made.
 
-
 ## Why?
 
 I was working on a project involving the `virt-install` command, which itself relies on the libxml2 python library to work.
@@ -21,6 +20,9 @@ I thought maybe I could create a thin wrapper around the official libxml2 C libr
 I saw similar attempts in the past but it seems they were largely outdated (the latest release I found contained libxml2 2.4.x ...).
 In addition, other packages I found could not be audited / rebuilt from source.
 Hopefully, this repository should be small enough that it is easy to audit if necessary.
+
+If [PEP 725](https://peps.python.org/pep-0725/) ever gets adopted, it is expected that this repository will become obsolete,
+as the same goal could then be achieved using the mechanisms proposed there.
 
 ## Installation
 
