@@ -80,3 +80,17 @@ It is now being maintained within the GNOME project.
 
 This code and accompanying files are released under the same license as libxml2 itself, namely the MIT license.
 See `LICENSE` inside this repository for more information.
+
+## Rebasing versioned branches
+
+To rebase the versioned branches, just run:
+
+```sh
+eval $(
+    set -x
+    git for-each-ref --shell \
+        --format='if [ "%(refname)" != "refs/heads/main" ]; then git rebase main %(refname) && git push -f origin %(refname); fi;' \
+        refs/heads/
+    set +x
+)
+```
