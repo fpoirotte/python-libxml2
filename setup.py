@@ -108,7 +108,8 @@ class my_bdist_wheel(bdist_wheel):
         os.unlink(os.path.join(tmpdir.name, f"libxml2-{version}.tar.xz"))
         os.rename(os.path.join(tmpdir.name, f"libxml2-{version}"), os.path.join(tmpdir.name, "src"))
 
-        # Locate the headers -- this uses the exact same code as setup.py.in in libxml2's python/ folder
+        # Locate the headers -- this uses the exact same code as libxml2 version 2.14.5
+        # for compatibility (see setup.py.in inside libxml2's python/ folder)
         def missing(file):
             if os.access(file, os.R_OK) == 0:
                 return 1
