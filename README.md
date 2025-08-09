@@ -49,6 +49,7 @@ You will need the following packages to build the libxml2 Python library from so
 * A working installation of Python >= 3.11
 * autoconf
 * automake
+* diffutils
 * libtool
 * A working compiler. GCC 14.2.0 is known to work.
 * both the libxml2 C library and its header files (i.e. `libxml2` & `libxml2-dev` on Debian)
