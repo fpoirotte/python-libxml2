@@ -1,6 +1,6 @@
 [project]
 name = "libxml2"
-version = "0.0.0"
+version = "2.12.5"
 description = "A wrapper around the C libxml2 library to make it installable through pip/uv"
 readme = "README.md"
 
