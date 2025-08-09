@@ -33,7 +33,7 @@ uv add libxml2==2.9.14
 **Note:** the version you install **MUST** match the version of libxml2 that is installed on your system.
 Attempting to use any other version will fail during this module's compilation.
 
-**Warning:** this will download and install a precompiled release.
+**Warning:** this may download and install a precompiled release.
 If you are concerned about security (as you should), you can instead opt to install the module from sources.
 
 ### Using pip
