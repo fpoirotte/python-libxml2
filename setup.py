@@ -53,8 +53,16 @@ old_pwd = os.getcwd()
 def build_using_autotools(libxml2, tmpdir):
     os.chdir(os.path.join(tmpdir.name, "src"))
     options = ["--%s-%s" % ("with" if v else "without", k[5:]) for (k, v) in libxml2['config'].items() if k.startswith('with_')]
+    # We want to force the installation to /usr/local, to make paths
+    # predictable later on when we need to move files around.
+    # Moreover, some versions have a separate set of variables to set
+    # the Python prefixes, while others rely on prefix/exec-prefix.
     options += [
         "--with-python",
+        "--prefix=/usr",
+        "--exec-prefix=/usr",
+        "--with-python_prefix=/usr",
+        "--with-python_exec_prefix=/usr",
     ]
 
     env = dict(os.environ.items())
@@ -67,8 +75,11 @@ def build_using_autotools(libxml2, tmpdir):
 
 def build_using_meson(libxml2, tmpdir):
     options = [f"-D{k}={str(v).lower()}" for (k, v) in libxml2['config'].items() if k.startswith('with_')]
+    # We want to force the installation to /usr/, to make paths
+    # predictable later on when we need to move files around.
     optiosn += [
         "-Dpython=true",
+        "-Dprefix=/usr",
     ]
 
     check_call([MESON, 'setup', *options, os.path.join(tmpdir.name, "build"), os.path.join(tmpdir.name, "src")])
@@ -157,9 +168,8 @@ class my_bdist_wheel(bdist_wheel):
         #
         # In addition, we may be running inside a virtual environment,
         # which will cause sysconfig.get_path() to return incorrect paths.
-        # We use sysconfig._get_preferred_schemes() to force it to return
-        # the native preferred paths for the platform, ignoring the virtual
-        # environment.
+        # We set base/platbase to the same prefix we used when building libxml2,
+        # to force it to return the correct paths, ignoring the virtual environment.
         #
         # Finally, the package manager may have set PYTHON* environment
         # variables which may also alter sysconfig.get_path()'s results.
@@ -170,7 +180,7 @@ class my_bdist_wheel(bdist_wheel):
                 sys.executable,
                 "-E",
                 "-c",
-                'import sysconfig; print(sysconfig.get_path("purelib", sysconfig._get_preferred_schemes()["prefix"]), end="")'
+                'import sysconfig; print(sysconfig.get_path("purelib", vars={"base": "/usr"}), end="")'
             ],
             text=True,
         )
@@ -179,7 +189,7 @@ class my_bdist_wheel(bdist_wheel):
                 sys.executable,
                 "-E",
                 "-c",
-                'import sysconfig; print(sysconfig.get_path("platlib", sysconfig._get_preferred_schemes()["prefix"]), end="")'
+                'import sysconfig; print(sysconfig.get_path("platlib", vars={"platbase": "/usr"}), end="")'
             ],
             text=True,
         )
