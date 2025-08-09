@@ -50,6 +50,10 @@ major, minor, patch = version.split('.', 2)
 major = int(major)
 minor = int(minor)
 
+if version == '0.0.0':
+    print(f"Unsupported version requested: {version}")
+    sys.exit(1)
+
 # Keep track of the current working directory for later reference
 old_pwd = os.getcwd()
 
