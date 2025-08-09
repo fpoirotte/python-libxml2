@@ -196,6 +196,9 @@ class my_bdist_wheel(bdist_wheel):
         purelib = Path(tmpdir.name) / "install" / f"./{purelib}"
         platlib = Path(tmpdir.name) / "install" / f"./{platlib}"
         for d in (purelib, platlib):
+            if not d.is_dir():
+                print(f"Skipping non-existent folder '{d}'")
+                continue
             for f in d.iterdir():
                 if not str(f).endswith((".so", ".py")):
                     continue
