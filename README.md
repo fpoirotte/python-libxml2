@@ -6,8 +6,14 @@ This repository acts as a wrapper around the C "libxml2" library and makes it ea
 Please do not direct bug reports / questions related to this Python wrapper to the official repository so as not to burden the official maintainers.
 See below for more information.
 
-**Warning:** this wrapper has only been tested on Debian.
-It might work on other distributions, but no guarantee is made.
+At the time of this writing, this wrapper is know to work on the following distributions:
+
+* Debian Trixie (libxml2 version 2.9.14)
+* Fedora 40, 41 & 42 (libxml2 version 2.12.8)
+* CentOS Stream 9 (libxml2 version 2.9.13)
+* CentOS Stream 10 (libxml2 version 2.12.5)
+
+It might work on other distributions/operating systems, but no guarantee is made.
 
 ## Why?
 
@@ -57,18 +63,18 @@ You will need the following packages to build the libxml2 Python library from so
 * both the libxml2 C library and its header files (i.e. `libxml2` & `libxml2-dev` on Debian)
 * header files for your Python installation (i.e. `python3-dev`)
 
-**Note:** for now, only builds on Linux (Debian Trixie) have been tested.
-Also, please note that as of this writing, the libxml2 package in Debian Trixie is `2.12.7+dfsg+really2.9.14-2.1`.
-As the name suggests, this is actually libxml2 version 2.9.14 with many patches to make it look like libxml2 version 2.12.7.
-
 ##### Procedure
 
 ```sh
 uv add "git+https://github.com/fpoirotte/python-libxml2" --branch 2.9.14
 ```
 
+**Note:** As of this writing, the libxml2 package in Debian Trixie is `2.12.7+dfsg+really2.9.14-2.1`.
+As the name suggests, this is actually libxml2 version 2.9.14 with several patches to make it behave more like libxml2 version 2.12.7.
+When installing the wrapper for Debian Trixie, select `2.9.14` as the branch to use.
+
 **Note:** the versioned branches contain the exact same code as the main branch, plus an additional commit to set the version.
-These branches may be force-pushed to, to periodically rebase them on the latest code from the main branch.
+These branches may be force-pushed to periodically, to rebase them on the latest code from the main branch.
 
 ## Bug reports
 
