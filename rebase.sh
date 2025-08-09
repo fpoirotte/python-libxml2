@@ -1,4 +1,7 @@
 #!/bin/bash
+# This scripts rebases each of the versioned branches (branches starting with "2.")
+# so that is has the same code as the main branch, plus an additional commit
+# that sets the libxml2 version for that branch.
 
 set -eo pipefail
 
