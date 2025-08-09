@@ -59,8 +59,11 @@ As the name suggests, this is actually libxml2 version 2.9.14 with many patches 
 ##### Procedure
 
 ```sh
-uv add "git+https://github.com/fpoirotte/python-libxml2" --tag 2.9.14
+uv add "git+https://github.com/fpoirotte/python-libxml2" --branch 2.9.14
 ```
+
+**Note:** the versioned branches contain the exact same code as the main branch, plus an additional commit to set the version.
+These branches may be force-pushed to, to periodically rebase them on the latest code from the main branch.
 
 ## Bug reports
 
